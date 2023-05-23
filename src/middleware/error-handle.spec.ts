@@ -1,17 +1,16 @@
-const errorHandle = require('./error-handle')
-const { CustomError } = require('./../errors/custom-error')
+import errorHandle from './error-handle'
+import { CustomError } from './../errors/custom-error'
+import { NextFunction, Request, Response } from 'express'
+import { getMockReq, getMockRes } from '@jest-mock/express'
 
 describe('errorHandle', () => {
-  let req
-  let res
-  let next
+  let req: Request;
+  let res: Response;
+  let next: NextFunction;
 
   beforeEach(() => {
-    req = {}
-    res = {
-      send: jest.fn(() => res),
-      status: jest.fn(() => res)
-    }
+    req = getMockReq()
+    res = getMockRes().res
     next = jest.fn()
   })
 

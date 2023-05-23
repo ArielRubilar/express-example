@@ -1,4 +1,4 @@
-const EventEmitter = require('events')
+import EventEmitter from 'events'
 
 const logger = new EventEmitter()
 
@@ -18,11 +18,11 @@ const logError = (context = '', message = '') => {
   logger.emit(LOGGER_EVENTS.MESSAGE, `[ERROR][${context}] - ${message} : ${new Date().getTime()}`)
 }
 
-const connect = (callback) => {
+const connect = (callback: (message: string) => void) => {
   logger.on(LOGGER_EVENTS.MESSAGE, callback)
 }
 
-module.exports = {
+export default {
   initLog,
   endLog,
   connect,

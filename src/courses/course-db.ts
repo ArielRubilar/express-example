@@ -10,12 +10,12 @@ const courses = [
 
 const getAllCourses = async () => courses
 
-const findCourseById = async (id) => {
+const findCourseById = async (id: number) => {
   const course = courses.find(course => course.id === id)
   return course
 }
 
-module.exports = {
+export default {
   getAllCourses,
   findCourseById
 }

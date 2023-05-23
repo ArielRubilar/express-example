@@ -1,12 +1,18 @@
-const CourseService = require('./courses-service')
-const courseDb = require('./course-db')
-const { BusinessError } = require('../errors/custom-error')
+import CourseService from './courses-service'
+import courseDb from './course-db'
+import { BusinessError } from '../errors/custom-error'
 
 describe('CoursesServices', () => {
   describe('getAllCourse', () => {
     it('should return 5 courses', async () => {
       const sut = CourseService.getAllCourse
-      const expected = [{}, {}, {}, {}, {}]
+      const expected = [
+        { id: 1, name: 'Quis deserunt ea aliquip officia do non in tempor ex culpa non ad excepteur.' },
+        { id: 2, name: 'Quis deserunt ea aliquip officia do non in tempor ex culpa non ad excepteur.' },
+        { id: 3, name: 'Quis deserunt ea aliquip officia do non in tempor ex culpa non ad excepteur.' },
+        { id: 4, name: 'Quis deserunt ea aliquip officia do non in tempor ex culpa non ad excepteur.' },
+        { id: 5, name: 'Quis deserunt ea aliquip officia do non in tempor ex culpa non ad excepteur.' },
+      ]
 
       jest.spyOn(courseDb, 'getAllCourses').mockResolvedValueOnce(expected)
       const actual = await sut()
@@ -22,7 +28,7 @@ describe('CoursesServices', () => {
         const expected = { id: 1, name: 'Pariatur fugiat pariatur eiusmod consequat amet est do quis laboris.' }
 
         jest.spyOn(courseDb, 'findCourseById').mockResolvedValueOnce(expected)
-        const actual = await sut()
+        const actual = await sut(99999)
 
         expect(actual).toBe(expected)
       })
@@ -32,13 +38,13 @@ describe('CoursesServices', () => {
       it('should throw business error', async () => {
         const sut = CourseService.getCourse
 
-        jest.spyOn(courseDb, 'findCourseById').mockResolvedValueOnce(null)
+        jest.spyOn(courseDb, 'findCourseById').mockResolvedValueOnce(undefined)
 
         try {
-          await sut()
+          await sut(2313123)
         } catch (e) {
           expect(e).toBeInstanceOf(BusinessError)
-          expect(e.message).toBe('Not Found')
+          expect((e as BusinessError).message).toBe('Not Found')
         }
       })
     })

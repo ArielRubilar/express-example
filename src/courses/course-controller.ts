@@ -1,20 +1,22 @@
-const { ParamsError } = require('../errors/custom-error')
-const courseService = require('./courses-service')
-const Logger = require('./../logger/logger')
+import { NextFunction, Request, Response } from "express"
 
-const getAllCourses = async (req, res, next) => {
+import { ParamsError } from '../errors/custom-error'
+import courseService from './courses-service'
+import Logger from './../logger/logger'
+
+const getAllCourses = async (req: Request, res: Response, next: NextFunction) => {
   try {
     Logger.initLog('getAllCourses')
     res.send(await courseService.getAllCourse())
   } catch (e) {
-    Logger.logError('getAllCourses', e)
+    Logger.logError('getAllCourses', `${e}`)
     next(e)
   } finally {
     Logger.endLog('getAllCourses')
   }
 }
 
-const getCourse = async (req, res, next) => {
+const getCourse = async (req: Request, res: Response, next: NextFunction) => {
   try {
     Logger.initLog('getCourse')
     const id = Number(req.params.id)
@@ -22,14 +24,14 @@ const getCourse = async (req, res, next) => {
 
     res.send(await courseService.getCourse(id))
   } catch (e) {
-    Logger.logError('getCourse', e)
+    Logger.logError('getCourse', `${e}`)
     next(e)
   } finally {
     Logger.endLog('getCourse')
   }
 }
 
-module.exports = {
+export default {
   getAllCourses,
   getCourse
 }

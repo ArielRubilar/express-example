@@ -1,15 +1,15 @@
-const express = require('express')
+import express from 'express'
+import Logger from './logger/logger'
+import notFoundMiddleware from './middleware/not-found'
+import errorHandle from './middleware/error-handle'
+import coursesRouter from './courses/courses-router'
 
 const router = express.Router()
 
-const Logger = require('./logger/logger')
 
-const notFoundMiddleware = require('./middleware/not-found')
-const errorHandle = require('./middleware/error-handle')
 
 Logger.connect(console.log)
 
-const coursesRouter = require('./courses/courses-router')
 
 const app = express()
 

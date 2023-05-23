@@ -1,16 +1,15 @@
-const notFoundMiddleware = require('./not-found')
+import { NextFunction, Request, Response } from 'express'
+import notFoundMiddleware from './not-found'
+import { getMockReq, getMockRes } from '@jest-mock/express'
 
 describe('notFoundMiddleware', () => {
-  let req
-  let res
-  let next
+  let req: Request;
+  let res: Response;
+  let next: NextFunction;
 
   beforeEach(() => {
-    req = {}
-    res = {
-      send: jest.fn(() => res),
-      status: jest.fn(() => res)
-    }
+    req = getMockReq()
+    res = getMockRes().res
     next = jest.fn()
   })
 

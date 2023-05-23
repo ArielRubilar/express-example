@@ -1,10 +1,10 @@
 
-const express = require('express')
-const courseController = require('./course-controller')
+import express from 'express'
+import courseController from './course-controller'
 const coursesRouter = express.Router()
 
 coursesRouter.get('/', courseController.getAllCourses)
 
 coursesRouter.get('/:id', courseController.getCourse)
 
-module.exports = coursesRouter
+export default coursesRouter
