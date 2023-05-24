@@ -17,7 +17,6 @@ export interface CourseDB {
   getAllCourses: () => Promise<Course[]>
 }
 
-
 function getLastId(courses: Course[]): number {
   return courses.map(course => course.id).sort((a, b) => b - a)[0]
 }
@@ -25,7 +24,6 @@ function getLastId(courses: Course[]): number {
 export default function createCourseDB(data: Course[] = COURSES): CourseDB {
 
   let courses = data.map(course => ({ ...course }))
-
 
   const getAllCourses = async () => courses
 

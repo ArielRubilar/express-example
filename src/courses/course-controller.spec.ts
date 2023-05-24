@@ -44,6 +44,54 @@ describe('CourseController', () => {
     })
   })
 
+  describe('deleteCourse', () => {
+    it('should send course', async () => {
+      const sut = courseController.deleteCourse
+
+
+      req = getMockReq({
+        params: {
+          id: '1'
+        }
+      })
+      const deleteCourseSpy = jest.spyOn(courseService, 'deleteCourse')
+      deleteCourseSpy.mockResolvedValueOnce()
+      await sut(req, res, next)
+
+      expect(deleteCourseSpy).toHaveBeenCalledWith(1)
+      expect(res.send).toHaveBeenCalledTimes(1)
+    })
+
+    describe('param id don`t exit', () => {
+      it('should next params error', async () => {
+        const sut = courseController.deleteCourse
+
+        req = {
+          params: {}
+        } as Request
+        await sut(req, res, next)
+
+        expect(next).toHaveBeenCalledWith(new ParamsError('Invalid Params'))
+      })
+    })
+
+    describe('param id is not a number', () => {
+      it('should next params error', async () => {
+        const sut = courseController.deleteCourse
+
+        req = getMockReq({
+          params: {
+            id: 'ID'
+          }
+        })
+        await sut(req, res, next)
+
+        expect(next).toHaveBeenCalledWith(new ParamsError('Invalid Params'))
+      })
+    })
+  })
+
+
   describe('getCourse', () => {
     it('should send course', async () => {
       const sut = courseController.getCourse
@@ -90,5 +138,42 @@ describe('CourseController', () => {
         expect(next).toHaveBeenCalledWith(new ParamsError('Invalid Params'))
       })
     })
+  })
+
+
+  describe('addCourse', () => {
+    it('should send new course', async () => {
+      const sut = courseController.addCourse
+
+      const newCourse = { id: 1, name: 'Voluptate aliqua commodo in veniam exercitation ullamco est enim consequat.' }
+
+      req = getMockReq({
+        body: {
+          name: 'test'
+        }
+      })
+      const addCourseSpy = jest.spyOn(courseService, 'addCourse')
+      addCourseSpy.mockResolvedValueOnce(newCourse)
+
+      await sut(req, res, next)
+
+      expect(addCourseSpy).toHaveBeenCalledWith({ name: 'test' })
+      expect(res.send).toHaveBeenCalledWith(newCourse)
+    })
+
+    describe('body  don`t have name', () => {
+      it('should next params error', async () => {
+        const sut = courseController.addCourse
+
+        req = {
+          body: {}
+        } as Request
+
+        await sut(req, res, next)
+
+        expect(next).toHaveBeenCalledWith(new ParamsError('Invalid Params'))
+      })
+    })
+
   })
 })
