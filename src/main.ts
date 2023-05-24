@@ -1,25 +1,9 @@
-import express from 'express'
 import Logger from './logger/logger'
-import notFoundMiddleware from './middleware/not-found'
-import errorHandle from './middleware/error-handle'
-import coursesRouter from './courses/courses-router'
-
-const router = express.Router()
-
-
+import server from './server'
 
 Logger.connect(console.log)
 
-
-const app = express()
-
-app.use(express.json())
-
-router.use('/courses', coursesRouter)
-
-app.use('/api', router)
-app.use(notFoundMiddleware)
-app.use(errorHandle)
+const app = server()
 
 const PORT = process.env.PORT || 3000
 

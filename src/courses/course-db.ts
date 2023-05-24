@@ -1,6 +1,6 @@
 import { Course, NewCourse } from "./course"
 
-let courses = [
+export const COURSES = [
 
   { id: 1, name: 'Mollit nostrud aliquip enim incididunt sint tempor nisi aute consectetur ex ex tempor velit.' },
   { id: 2, name: 'Mollit nostrud aliquip enim incididunt sint tempor nisi aute consectetur ex ex tempor velit.' },
@@ -10,31 +10,45 @@ let courses = [
   { id: 6, name: 'Mollit nostrud aliquip enim incididunt sint tempor nisi aute consectetur ex ex tempor velit.' }
 ]
 
-function getLastId(): number {
+export interface CourseDB {
+  addCourse: (newCourse: NewCourse) => Promise<Course>,
+  deleteCourseById: (id: number) => Promise<void>,
+  findCourseById: (id: number) => Promise<Course | undefined>
+  getAllCourses: () => Promise<Course[]>
+}
+
+
+function getLastId(courses: Course[]): number {
   return courses.map(course => course.id).sort((a, b) => b - a)[0]
 }
 
-const getAllCourses = async () => courses
+export default function createCourseDB(data: Course[] = COURSES): CourseDB {
 
-const findCourseById = async (id: number) => {
-  const course = courses.find(course => course.id === id)
-  return course
-}
+  let courses = data.map(course => ({ ...course }))
 
-const deleteCourseById = async (id: number): Promise<void> => {
-  courses = courses.filter(course => course.id !== id)
-}
 
-const addCourse = async (newCourse: NewCourse): Promise<Course> => {
-  const id = getLastId() + 1
-  const course = { ...newCourse, id }
-  courses = [...courses, course]
-  return course
-}
+  const getAllCourses = async () => courses
 
-export default {
-  getAllCourses,
-  findCourseById,
-  deleteCourseById,
-  addCourse
+  const findCourseById = async (id: number) => {
+    const course = courses.find(course => course.id === id)
+    return course
+  }
+
+  const deleteCourseById = async (id: number): Promise<void> => {
+    courses = courses.filter(course => course.id !== id)
+  }
+
+  const addCourse = async (newCourse: NewCourse): Promise<Course> => {
+    const id = getLastId(courses) + 1
+    const course = { ...newCourse, id }
+    courses = [...courses, course]
+    return course
+  }
+
+  return ({
+    getAllCourses,
+    findCourseById,
+    deleteCourseById,
+    addCourse
+  })
 }

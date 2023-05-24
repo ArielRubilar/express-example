@@ -1,33 +1,42 @@
 import { BusinessError } from '../errors/custom-error'
 import { Course, NewCourse } from './course'
-import courseDb from './course-db'
+import { CourseDB } from './course-db'
 
-const getAllCourse = async (): Promise<Course[]> => {
-  return await courseDb.getAllCourses()
+export interface CourseService {
+  getAllCourse: () => Promise<Course[]>,
+  getCourse: (id: number) => Promise<Course>,
+  deleteCourse: (id: number) => Promise<void>,
+  addCourse: (newCourse: NewCourse) => Promise<Course>
 }
 
-const getCourse = async (id: number): Promise<Course> => {
-  const course = await courseDb.findCourseById(id)
+const getAllCourse = (courseDB: CourseDB) => async (): Promise<Course[]> => {
+  return await courseDB.getAllCourses()
+}
+
+const getCourse = (courseDB: CourseDB) => async (id: number): Promise<Course> => {
+  const course = await courseDB.findCourseById(id)
   if (!course) throw new BusinessError('Not Found', 404)
   return course
 }
 
 
-const deleteCourse = async (id: number): Promise<void> => {
-  const course = await courseDb.findCourseById(id)
+const deleteCourse = (courseDB: CourseDB) => async (id: number): Promise<void> => {
+  const course = await courseDB.findCourseById(id)
   if (!course) throw new BusinessError('Not Found', 404)
-  await courseDb.deleteCourseById(id)
+  await courseDB.deleteCourseById(id)
 }
 
-const addCourse = async (newCourse: NewCourse): Promise<Course> => {
-  const course = await courseDb.addCourse(newCourse)
+const addCourse = (courseDB: CourseDB) => async (newCourse: NewCourse): Promise<Course> => {
+  const course = await courseDB.addCourse(newCourse)
   return course
 }
 
-
-export default {
-  getAllCourse,
-  getCourse,
-  deleteCourse,
-  addCourse
+export default function createCourseService(courseDB: CourseDB): CourseService {
+  return {
+    getAllCourse: getAllCourse(courseDB),
+    getCourse: getCourse(courseDB),
+    deleteCourse: deleteCourse(courseDB),
+    addCourse: addCourse(courseDB)
+  }
 }
+

@@ -1,11 +1,25 @@
-import CourseService from './courses-service'
-import courseDb from './course-db'
+import createCourseService, { CourseService } from './courses-service'
+import { CourseDB } from './course-db'
 import { BusinessError } from '../errors/custom-error'
 
 describe('CoursesServices', () => {
+
+  let courseService: CourseService
+  let courseDB: CourseDB
+
+  beforeEach(() => {
+    courseDB = {
+      addCourse: jest.fn(),
+      deleteCourseById: jest.fn(),
+      getAllCourses: jest.fn(),
+      findCourseById: jest.fn()
+    }
+    courseService = createCourseService(courseDB)
+  })
+
   describe('getAllCourse', () => {
     it('should return 5 courses', async () => {
-      const sut = CourseService.getAllCourse
+      const sut = courseService.getAllCourse
       const expected = [
         { id: 1, name: 'Quis deserunt ea aliquip officia do non in tempor ex culpa non ad excepteur.' },
         { id: 2, name: 'Quis deserunt ea aliquip officia do non in tempor ex culpa non ad excepteur.' },
@@ -14,7 +28,7 @@ describe('CoursesServices', () => {
         { id: 5, name: 'Quis deserunt ea aliquip officia do non in tempor ex culpa non ad excepteur.' },
       ]
 
-      jest.spyOn(courseDb, 'getAllCourses').mockResolvedValueOnce(expected)
+      jest.spyOn(courseDB, 'getAllCourses').mockResolvedValueOnce(expected)
       const actual = await sut()
 
       expect(actual).toHaveLength(5)
@@ -24,10 +38,10 @@ describe('CoursesServices', () => {
   describe('getCourse', () => {
     describe('if course id exist', () => {
       it('should return one course', async () => {
-        const sut = CourseService.getCourse
+        const sut = courseService.getCourse
         const expected = { id: 1, name: 'Pariatur fugiat pariatur eiusmod consequat amet est do quis laboris.' }
 
-        jest.spyOn(courseDb, 'findCourseById').mockResolvedValueOnce(expected)
+        jest.spyOn(courseDB, 'findCourseById').mockResolvedValueOnce(expected)
         const actual = await sut(99999)
 
         expect(actual).toBe(expected)
@@ -36,9 +50,9 @@ describe('CoursesServices', () => {
 
     describe('if course id  don`t exit', () => {
       it('should throw business error', async () => {
-        const sut = CourseService.getCourse
+        const sut = courseService.getCourse
 
-        jest.spyOn(courseDb, 'findCourseById').mockResolvedValueOnce(undefined)
+        jest.spyOn(courseDB, 'findCourseById').mockResolvedValueOnce(undefined)
 
         try {
           await sut(2313123)

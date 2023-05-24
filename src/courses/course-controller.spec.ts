@@ -2,16 +2,26 @@ import { NextFunction, Request, Response } from "express"
 import { getMockReq, getMockRes } from '@jest-mock/express'
 
 import { ParamsError } from '../errors/custom-error'
-import CoursesController from './course-controller'
-
-import CourseService from './courses-service'
+import createCourseController, { CourseController } from './course-controller'
+import { CourseService } from './courses-service'
 
 describe('CourseController', () => {
   let req: Request
   let res: Response
   let next: NextFunction
 
+  let courseController: CourseController
+  let courseService: CourseService
+
   beforeEach(() => {
+    courseService = {
+      getAllCourse: jest.fn(),
+      getCourse: jest.fn(),
+      deleteCourse: jest.fn(),
+      addCourse: jest.fn(),
+    }
+
+    courseController = createCourseController(courseService)
     req = {} as Request
     res = getMockRes().res
     next = jest.fn()
@@ -19,7 +29,7 @@ describe('CourseController', () => {
 
   describe('getAllCourses', () => {
     it('should send all courses', async () => {
-      const sut = CoursesController.getAllCourses
+      const sut = courseController.getAllCourses
 
       const expected = [
         { id: 1, name: 'Velit sit adipisicing quis incididunt sint labore incididunt officia dolor occaecat duis.' },
@@ -27,7 +37,7 @@ describe('CourseController', () => {
         { id: 3, name: 'Consequat proident sunt deserunt deserunt ut tempor magna Lorem laboris non eu non Lorem.' }
       ]
 
-      jest.spyOn(CourseService, 'getAllCourse').mockResolvedValueOnce(expected)
+      jest.spyOn(courseService, 'getAllCourse').mockResolvedValueOnce(expected)
       await sut(req, res, next)
 
       expect(res.send).toHaveBeenCalledWith(expected)
@@ -36,7 +46,7 @@ describe('CourseController', () => {
 
   describe('getCourse', () => {
     it('should send course', async () => {
-      const sut = CoursesController.getCourse
+      const sut = courseController.getCourse
 
       const expected = { id: 1, name: 'Voluptate aliqua commodo in veniam exercitation ullamco est enim consequat.' }
 
@@ -45,7 +55,7 @@ describe('CourseController', () => {
           id: '1'
         }
       })
-      const getCourseSpy = jest.spyOn(CourseService, 'getCourse')
+      const getCourseSpy = jest.spyOn(courseService, 'getCourse')
       getCourseSpy.mockResolvedValueOnce(expected)
       await sut(req, res, next)
 
@@ -55,7 +65,7 @@ describe('CourseController', () => {
 
     describe('param id don`t exit', () => {
       it('should next params error', async () => {
-        const sut = CoursesController.getCourse
+        const sut = courseController.getCourse
 
         req = {
           params: {}
@@ -68,7 +78,7 @@ describe('CourseController', () => {
 
     describe('param id is not a number', () => {
       it('should next params error', async () => {
-        const sut = CoursesController.getCourse
+        const sut = courseController.getCourse
 
         req = getMockReq({
           params: {
