@@ -1,7 +1,6 @@
 import { Course, NewCourse } from "./course"
 
 export const COURSES = [
-
   { id: 1, name: 'Mollit nostrud aliquip enim incididunt sint tempor nisi aute consectetur ex ex tempor velit.' },
   { id: 2, name: 'Mollit nostrud aliquip enim incididunt sint tempor nisi aute consectetur ex ex tempor velit.' },
   { id: 3, name: 'Mollit nostrud aliquip enim incididunt sint tempor nisi aute consectetur ex ex tempor velit.' },
