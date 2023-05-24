@@ -1,3 +1,3 @@
 # express-example
 
-Template of api by layers
+THIS APPLICATION IS CREATED TO STUDY THE BEST PRACTICES IN EXPRESS

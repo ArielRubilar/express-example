@@ -7,4 +7,8 @@ coursesRouter.get('/', courseController.getAllCourses)
 
 coursesRouter.get('/:id', courseController.getCourse)
 
+coursesRouter.delete('/:id', courseController.deleteCourse)
+
+coursesRouter.post('/', courseController.addCourse)
+
 export default coursesRouter
