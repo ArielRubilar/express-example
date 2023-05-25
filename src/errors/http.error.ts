@@ -25,7 +25,7 @@ export class HttpError extends Error implements IHttpError {
 
 export class ParamsError extends HttpError implements IHttpError {
   constructor(message: string) {
-    super(404, { status: 'NO OK', message })
+    super(400, { status: 'NO OK', message })
     this.name = 'ParamsError'
   }
 }
