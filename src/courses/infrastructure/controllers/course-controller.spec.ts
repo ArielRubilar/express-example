@@ -137,6 +137,20 @@ describe('CourseController', () => {
       })
     })
 
+    describe('course  don`t exit', () => {
+      it('should next params error', async () => {
+        const sut = courseController.getCourse
+
+        req = getMockReq()
+        req.params.id = '1'
+        const deleteCourseSpy = jest.spyOn(courseService, 'getCourse')
+        deleteCourseSpy.mockRejectedValueOnce(new CourseNotFound('Not Found'))
+
+        await sut(req, res, next)
+
+        expect(next).toHaveBeenCalledWith(new HttpError(404, { status: 'NO OK', message: 'Not Found' }))
+      })
+    })
 
   })
 

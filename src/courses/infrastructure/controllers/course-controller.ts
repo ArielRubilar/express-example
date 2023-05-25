@@ -28,6 +28,8 @@ function createCourseController(courseService: CoursesUseCases, logger: Logger):
 
       res.send(await courseService.getCourse(id))
     } catch (e) {
+
+      if (e instanceof CourseNotFound) return next(new HttpError(404, { status: e.status, message: e.message }))
       logger.logError('getCourse', `${e}`)
       next(e)
     } finally {
