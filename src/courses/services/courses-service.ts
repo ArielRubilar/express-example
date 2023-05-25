@@ -1,26 +1,20 @@
-import { BusinessError } from '../errors/custom-error'
-import { Course, NewCourse } from './course'
-import { CourseDB } from './course-db'
-
-export interface CourseService {
-  getAllCourse: () => Promise<Course[]>,
-  getCourse: (id: number) => Promise<Course>,
-  deleteCourse: (id: number) => Promise<void>,
-  addCourse: (newCourse: NewCourse) => Promise<Course>
-}
+import { BusinessError } from '../../errors/custom-error'
+import { Course, NewCourse } from '../course.type'
+import { CourseDB } from '../db/db.types'
+import { CourseService } from './course-services.type'
 
 const getAllCourse = (courseDB: CourseDB) => async (): Promise<Course[]> => {
   return await courseDB.getAllCourses()
 }
 
-const getCourse = (courseDB: CourseDB) => async (id: number): Promise<Course> => {
+const getCourse = (courseDB: CourseDB) => async (id: string): Promise<Course> => {
   const course = await courseDB.findCourseById(id)
   if (!course) throw new BusinessError('Not Found', 404)
   return course
 }
 
 
-const deleteCourse = (courseDB: CourseDB) => async (id: number): Promise<void> => {
+const deleteCourse = (courseDB: CourseDB) => async (id: string): Promise<void> => {
   const course = await courseDB.findCourseById(id)
   if (!course) throw new BusinessError('Not Found', 404)
   await courseDB.deleteCourseById(id)

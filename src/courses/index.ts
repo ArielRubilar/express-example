@@ -1,14 +1,23 @@
-import createCourseController from './course-controller'
-import createCourseService from './courses-service'
+import createCourseController from './controllers/course-controller'
+import createCourseService from './services/courses-service'
 import createCourseRoutes from './courses-routes'
-import createCourseDB, { COURSES } from './course-db'
+import createCourseStaticDB, { COURSES } from './db/static/course-db'
+import createCoursesMongoDB from './db/mongo/course-mongo-db'
 
-const courseDB = createCourseDB(COURSES)
+const courseDB = createCourseStaticDB(COURSES)
 
 const courseService = createCourseService(courseDB)
 
 const coursesController = createCourseController(courseService)
 
-const coursesRoutes = createCourseRoutes(coursesController)
+export const coursesRoutesWithStaticDB = createCourseRoutes(coursesController)
 
-export default coursesRoutes
+
+const courseMongoDB = createCoursesMongoDB()
+
+const courseMongoService = createCourseService(courseMongoDB)
+
+const coursesMongoController = createCourseController(courseMongoService)
+
+export const coursesRoutesWithMongoDB = createCourseRoutes(coursesMongoController)
+

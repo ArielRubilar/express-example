@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from "express"
 import { getMockReq, getMockRes } from '@jest-mock/express'
 
-import { ParamsError } from '../errors/custom-error'
-import createCourseController, { CourseController } from './course-controller'
-import { CourseService } from './courses-service'
+import { ParamsError } from '../../errors/custom-error'
+import createCourseController from './course-controller'
+import { CourseService } from "../services/course-services.type"
+import { CourseController } from "./course-controller.type"
 
 describe('CourseController', () => {
   let req: Request
@@ -32,9 +33,9 @@ describe('CourseController', () => {
       const sut = courseController.getAllCourses
 
       const expected = [
-        { id: 1, name: 'Velit sit adipisicing quis incididunt sint labore incididunt officia dolor occaecat duis.' },
-        { id: 2, name: 'Lorem veniam labore velit duis magna cillum dolore in consequat.' },
-        { id: 3, name: 'Consequat proident sunt deserunt deserunt ut tempor magna Lorem laboris non eu non Lorem.' }
+        { id: '1', name: 'Velit sit adipisicing quis incididunt sint labore incididunt officia dolor occaecat duis.' },
+        { id: '2', name: 'Lorem veniam labore velit duis magna cillum dolore in consequat.' },
+        { id: '3', name: 'Consequat proident sunt deserunt deserunt ut tempor magna Lorem laboris non eu non Lorem.' }
       ]
 
       jest.spyOn(courseService, 'getAllCourse').mockResolvedValueOnce(expected)
@@ -58,7 +59,7 @@ describe('CourseController', () => {
       deleteCourseSpy.mockResolvedValueOnce()
       await sut(req, res, next)
 
-      expect(deleteCourseSpy).toHaveBeenCalledWith(1)
+      expect(deleteCourseSpy).toHaveBeenCalledWith('1')
       expect(res.send).toHaveBeenCalledTimes(1)
     })
 
@@ -75,20 +76,7 @@ describe('CourseController', () => {
       })
     })
 
-    describe('param id is not a number', () => {
-      it('should next params error', async () => {
-        const sut = courseController.deleteCourse
 
-        req = getMockReq({
-          params: {
-            id: 'ID'
-          }
-        })
-        await sut(req, res, next)
-
-        expect(next).toHaveBeenCalledWith(new ParamsError('Invalid Params'))
-      })
-    })
   })
 
 
@@ -96,7 +84,7 @@ describe('CourseController', () => {
     it('should send course', async () => {
       const sut = courseController.getCourse
 
-      const expected = { id: 1, name: 'Voluptate aliqua commodo in veniam exercitation ullamco est enim consequat.' }
+      const expected = { id: '1', name: 'Voluptate aliqua commodo in veniam exercitation ullamco est enim consequat.' }
 
       req = getMockReq({
         params: {
@@ -107,7 +95,7 @@ describe('CourseController', () => {
       getCourseSpy.mockResolvedValueOnce(expected)
       await sut(req, res, next)
 
-      expect(getCourseSpy).toHaveBeenCalledWith(1)
+      expect(getCourseSpy).toHaveBeenCalledWith('1')
       expect(res.send).toHaveBeenCalledWith(expected)
     })
 
@@ -124,20 +112,7 @@ describe('CourseController', () => {
       })
     })
 
-    describe('param id is not a number', () => {
-      it('should next params error', async () => {
-        const sut = courseController.getCourse
 
-        req = getMockReq({
-          params: {
-            id: 'ID'
-          }
-        })
-        await sut(req, res, next)
-
-        expect(next).toHaveBeenCalledWith(new ParamsError('Invalid Params'))
-      })
-    })
   })
 
 
@@ -145,7 +120,7 @@ describe('CourseController', () => {
     it('should send new course', async () => {
       const sut = courseController.addCourse
 
-      const newCourse = { id: 1, name: 'Voluptate aliqua commodo in veniam exercitation ullamco est enim consequat.' }
+      const newCourse = { id: '1', name: 'Voluptate aliqua commodo in veniam exercitation ullamco est enim consequat.' }
 
       req = getMockReq({
         body: {

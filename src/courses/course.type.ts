@@ -1,6 +1,6 @@
 export interface Course {
-    id: number,
-    name: string
+    id: string,
+    name: string,
 }
 
 export type NewCourse = Omit<Course, 'id'>

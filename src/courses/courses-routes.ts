@@ -1,6 +1,6 @@
 
 import express, { Router } from 'express'
-import { CourseController } from './course-controller'
+import { CourseController } from './controllers/course-controller.type'
 
 export default function createCourseRoutes(courseController: CourseController): Router {
     const coursesRoutes = express.Router()

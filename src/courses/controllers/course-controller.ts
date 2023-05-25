@@ -1,16 +1,9 @@
 import { NextFunction, Request, Response } from "express"
-import { ParamsError } from '../errors/custom-error'
-import { CourseService } from './courses-service'
-import Logger from './../logger/logger'
+import { ParamsError } from '../../errors/custom-error'
+import { CourseService } from "../services/course-services.type"
+import { CourseController, ExpressRouteFunc } from './course-controller.type'
+import Logger from '../../logger/logger'
 
-type ExpressRouteFunc = (req: Request, res: Response, next: NextFunction) => void | Promise<void>
-
-export interface CourseController {
-  getAllCourses: ExpressRouteFunc,
-  getCourse: ExpressRouteFunc,
-  deleteCourse: ExpressRouteFunc,
-  addCourse: ExpressRouteFunc
-}
 
 const getAllCourses = (courseService: CourseService): ExpressRouteFunc => {
 
@@ -32,8 +25,8 @@ const getCourse = (courseService: CourseService) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       Logger.initLog('getCourse')
-      const id = Number(req.params.id)
-      if (isNaN(id)) throw new ParamsError('Invalid Params')
+      const id = req.params.id
+      if (!id) throw new ParamsError('Invalid Params')
 
       res.send(await courseService.getCourse(id))
     } catch (e) {
@@ -50,8 +43,8 @@ const deleteCourse = (courseService: CourseService) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       Logger.initLog('deleteCourse')
-      const id = Number(req.params.id)
-      if (isNaN(id)) throw new ParamsError('Invalid Params')
+      const id = req.params.id
+      if (!id) throw new ParamsError('Invalid Params')
 
       res.status(202).send(await courseService.deleteCourse(id))
     } catch (e) {
