@@ -5,10 +5,9 @@ export const DB_CONFIG = {
 } as const
 
 
-const connect = (url: string) => {
-    mongoose.connect(url).then(() => {
-        console.log('Database Connected')
-    })
+const connect = async (url: string) => {
+    await mongoose.connect(url)
+    console.log('Database Connected')
 }
 
 export default {

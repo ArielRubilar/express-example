@@ -5,6 +5,7 @@ import { ParamsError } from '../../errors/custom-error'
 import createCourseController from './course-controller'
 import { CourseService } from "../services/course-services.type"
 import { CourseController } from "./course-controller.type"
+import { Logger } from "../../logger/logger.type"
 
 describe('CourseController', () => {
   let req: Request
@@ -13,6 +14,7 @@ describe('CourseController', () => {
 
   let courseController: CourseController
   let courseService: CourseService
+  let logger: Logger
 
   beforeEach(() => {
     courseService = {
@@ -22,7 +24,14 @@ describe('CourseController', () => {
       addCourse: jest.fn(),
     }
 
-    courseController = createCourseController(courseService)
+    logger = {
+      initLog: jest.fn(),
+      endLog: jest.fn(),
+      logError: jest.fn(),
+      connect: jest.fn()
+    }
+
+    courseController = createCourseController(courseService, logger)
     req = {} as Request
     res = getMockRes().res
     next = jest.fn()
