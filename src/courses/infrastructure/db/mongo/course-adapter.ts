@@ -1,4 +1,4 @@
-import { Course, NewCourse } from "../../course.type";
+import { Course, NewCourse } from "../../../domain/course.type";
 import { CourseDoc, CourseRawDoc, } from "./course.model";
 
 export const courseDocToCourse = (courseDoc: CourseDoc): Course => {

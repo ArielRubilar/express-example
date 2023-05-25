@@ -1,6 +1,6 @@
-import { Course, NewCourse } from "../course.type";
+import { Course, NewCourse } from "../domain/course.type";
 
-export interface CourseService {
+export interface CoursesUseCases {
     getAllCourse: () => Promise<Course[]>,
     getCourse: (id: string) => Promise<Course>,
     deleteCourse: (id: string) => Promise<void>,

@@ -1,11 +1,12 @@
 import { NextFunction, Request, Response } from "express"
 import { getMockReq, getMockRes } from '@jest-mock/express'
 
-import { ParamsError } from '../../errors/custom-error'
+import { HttpError, ParamsError } from '../../../errors/http.error'
 import createCourseController from './course-controller'
-import { CourseService } from "../services/course-services.type"
+import { CoursesUseCases } from "../../application/courses-use-cases.type"
 import { CourseController } from "./course-controller.type"
-import { Logger } from "../../logger/logger.type"
+import { Logger } from "../../../logger/logger.type"
+import { CourseNotFound } from "../../application/courses.errors"
 
 describe('CourseController', () => {
   let req: Request
@@ -13,7 +14,7 @@ describe('CourseController', () => {
   let next: NextFunction
 
   let courseController: CourseController
-  let courseService: CourseService
+  let courseService: CoursesUseCases
   let logger: Logger
 
   beforeEach(() => {
@@ -82,6 +83,21 @@ describe('CourseController', () => {
         await sut(req, res, next)
 
         expect(next).toHaveBeenCalledWith(new ParamsError('Invalid Params'))
+      })
+    })
+
+    describe('course  don`t exit', () => {
+      it('should next params error', async () => {
+        const sut = courseController.deleteCourse
+
+        req = getMockReq()
+        req.params.id = '1'
+        const deleteCourseSpy = jest.spyOn(courseService, 'deleteCourse')
+        deleteCourseSpy.mockRejectedValueOnce(new CourseNotFound('Not Found'))
+
+        await sut(req, res, next)
+
+        expect(next).toHaveBeenCalledWith(new HttpError(404, { status: 'NO OK', message: 'Not Found' }))
       })
     })
 

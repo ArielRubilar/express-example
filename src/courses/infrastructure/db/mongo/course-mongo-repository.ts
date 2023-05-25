@@ -1,5 +1,5 @@
-import { Course, NewCourse } from "../../course.type"
-import { CourseDB } from '../db.types'
+import { Course, NewCourse } from "../../../domain/course.type"
+import { CourseRepository } from '../../../domain/course.repository'
 import { Course as CourseDoc } from "./course.model"
 import { courseDocToCourse, newCourseToCourseRawDoc } from "./course-adapter"
 
@@ -26,7 +26,7 @@ const getAllCourses = async (): Promise<Course[]> => {
     return courseDocs.map(courseDocToCourse)
 }
 
-export default function createCoursesMongoDB(): CourseDB {
+export default function createCoursesMongoRepository(): CourseRepository {
 
     return {
         addCourse,

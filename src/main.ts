@@ -1,10 +1,11 @@
 import { config } from 'dotenv'
 config()
 
-import mongoDb, { DB_CONFIG } from './config/db.config'
+import { DB_CONFIG } from './config/db.config'
 import Logger from './logger/logger'
 import router from './routers'
 import server from './server'
+import mongoDb from './db/mongo.db'
 
 
 

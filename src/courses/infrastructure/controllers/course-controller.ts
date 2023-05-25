@@ -1,10 +1,11 @@
 import { NextFunction, Request, Response } from "express"
-import { ParamsError } from '../../errors/custom-error'
-import { CourseService } from "../services/course-services.type"
+import { HttpError, ParamsError } from '../../../errors/http.error'
+import { CoursesUseCases } from "../../application/courses-use-cases.type"
 import { CourseController } from './course-controller.type'
-import { Logger } from "../../logger/logger.type"
+import { Logger } from "../../../logger/logger.type"
+import { CourseNotFound } from "../../application/courses.errors"
 
-function createCourseController(courseService: CourseService, logger: Logger): CourseController {
+function createCourseController(courseService: CoursesUseCases, logger: Logger): CourseController {
 
   const getAllCourses = async (_: Request, res: Response, next: NextFunction) => {
     try {
@@ -43,6 +44,8 @@ function createCourseController(courseService: CourseService, logger: Logger): C
 
       res.status(202).send(await courseService.deleteCourse(id))
     } catch (e) {
+
+      if (e instanceof CourseNotFound) return next(new HttpError(404, { status: e.status, message: e.message }))
       logger.logError('deleteCourse', `${e}`)
       next(e)
     } finally {

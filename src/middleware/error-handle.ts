@@ -1,16 +1,18 @@
 import { NextFunction, Request, Response } from "express"
-import { ICustomError } from './../errors/custom-error'
+import { IHttpError } from '../errors/http.error'
 
-const errorHandle = (error: ICustomError | Error, req: Request, res: Response, next: NextFunction) => {
-  let status = 500
-  if ('status' in error) {
-    status = error.status
+const errorHandle = (internalError: IHttpError | Error, req: Request, res: Response, next: NextFunction) => {
+  let httpStatus = 500
+  if ('httpStatus' in internalError) {
+    httpStatus = internalError.httpStatus
   }
-  res.status(status).send({
-    error: {
-      status: status,
-      message: error.message || 'Internal Server Error'
-    }
+  let error = { status: 'NO OK', message: 'Internal Server Error' }
+  if ('error' in internalError) {
+    error.status = internalError.error.status
+    error.message = internalError.error.message
+  }
+  res.status(httpStatus).send({
+    error: error
   })
 }
 

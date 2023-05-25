@@ -1,12 +1,12 @@
-import { BusinessError } from "../../errors/custom-error"
-import { CourseDB } from "../db/db.types"
-import { CourseService } from "./course-services.type"
-import createCourseService from "./courses-service"
+import { CourseRepository } from "../domain/course.repository"
+import { CoursesUseCases } from "./courses-use-cases.type"
+import createCourseUseCases from "./courses-use-cases"
+import { CourseNotFound } from "./courses.errors"
 
 describe('CoursesServices', () => {
 
-  let courseService: CourseService
-  let courseDB: CourseDB
+  let courseService: CoursesUseCases
+  let courseDB: CourseRepository
 
   beforeEach(() => {
     courseDB = {
@@ -15,7 +15,7 @@ describe('CoursesServices', () => {
       getAllCourses: jest.fn(),
       findCourseById: jest.fn()
     }
-    courseService = createCourseService(courseDB)
+    courseService = createCourseUseCases(courseDB)
   })
 
   describe('getAllCourse', () => {
@@ -58,8 +58,8 @@ describe('CoursesServices', () => {
         try {
           await sut('231312')
         } catch (e) {
-          expect(e).toBeInstanceOf(BusinessError)
-          expect((e as BusinessError).message).toBe('Not Found')
+          expect(e).toBeInstanceOf(CourseNotFound)
+          expect((e as CourseNotFound).message).toBe('Course(231312) not found!')
         }
       })
     })
@@ -89,8 +89,8 @@ describe('CoursesServices', () => {
         try {
           await sut('2313123')
         } catch (e) {
-          expect(e).toBeInstanceOf(BusinessError)
-          expect((e as BusinessError).message).toBe('Not Found')
+          expect(e).toBeInstanceOf(CourseNotFound)
+          expect((e as CourseNotFound).message).toBe('Course(2313123) not found!')
         }
       })
     })

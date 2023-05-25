@@ -1,5 +1,5 @@
-import { Course, NewCourse } from "../../course.type"
-import { CourseDB } from "../db.types"
+import { Course, NewCourse } from "../../../domain/course.type"
+import { CourseRepository } from "../../../domain/course.repository"
 
 export const COURSES = [
   { id: '1', name: 'Mollit nostrud aliquip enim incididunt sint tempor nisi aute consectetur ex ex tempor velit.' },
@@ -15,7 +15,7 @@ function getLastId(courses: Course[]): number {
   return courses.map(course => Number(course.id)).sort((a, b) => b - a)[0]
 }
 
-export default function createCourseStaticDB(data: Course[] = COURSES): CourseDB {
+export default function createCourseStaticRepository(data: Course[] = COURSES): CourseRepository {
 
   let courses = data.map(course => ({ ...course }))
 

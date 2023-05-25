@@ -1,5 +1,5 @@
 import errorHandle from './error-handle'
-import { CustomError } from './../errors/custom-error'
+import { HttpError } from '../errors/http.error'
 import { NextFunction, Request, Response } from 'express'
 import { getMockReq, getMockRes } from '@jest-mock/express'
 
@@ -17,7 +17,7 @@ describe('errorHandle', () => {
   describe('if error has status', () => {
     it('should have same status', () => {
       const sut = errorHandle
-      const error = new CustomError('Custom Error', 303)
+      const error = new HttpError(303, { status: 'NO OK', message: '' })
       sut(error, req, res, next)
 
       expect(res.status).toHaveBeenCalledWith(303)
