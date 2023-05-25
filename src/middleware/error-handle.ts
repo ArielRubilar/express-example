@@ -6,14 +6,12 @@ const errorHandle = (internalError: IHttpError | Error, req: Request, res: Respo
   if ('httpStatus' in internalError) {
     httpStatus = internalError.httpStatus
   }
-  let error = { status: 'NO OK', message: 'Internal Server Error' }
+  let error = { status: 'NO OK', error: 'Internal Server Error' }
   if ('error' in internalError) {
     error.status = internalError.error.status
-    error.message = internalError.error.message
+    error.error = internalError.error.message
   }
-  res.status(httpStatus).send({
-    error: error
-  })
+  res.status(httpStatus).send(error)
 }
 
 export default errorHandle
