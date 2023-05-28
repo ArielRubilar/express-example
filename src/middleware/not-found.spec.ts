@@ -24,8 +24,8 @@ describe('notFoundMiddleware', () => {
   it('should send error', () => {
     const sut = notFoundMiddleware
     const expected = {
-      error: 'NO OK',
-      status: 'Not Found'
+      status: 'NO OK',
+      error: 'Not found'
     }
     sut(req, res, next)
 

@@ -13,6 +13,12 @@ I try to implement clean architecture in this project.
 I didn't have to make many changes, fortunately.
 I think using the pendency injection and keeping everything separate helped to avoid having to do a big refactor.
 
+### V2.0.1
+
+I try to implement a adapter for mongo repository.
+For the moment I feel it is overkill. I feel that the previous version was more than enough.
+
+
 ## Installation
 
 ```bash

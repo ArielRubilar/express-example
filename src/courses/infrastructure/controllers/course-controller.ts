@@ -28,9 +28,8 @@ function createCourseController(courseService: CoursesUseCases, logger: Logger):
 
       res.send(await courseService.getCourse(id))
     } catch (e) {
-
-      if (e instanceof CourseNotFound) return next(new HttpError(404, { status: e.status, message: e.message }))
       logger.logError('getCourse', `${e}`)
+      if (e instanceof CourseNotFound) return next(new HttpError(404, { status: e.status, message: e.message }))
       next(e)
     } finally {
       logger.endLog('getCourse')
@@ -46,9 +45,9 @@ function createCourseController(courseService: CoursesUseCases, logger: Logger):
 
       res.status(202).send(await courseService.deleteCourse(id))
     } catch (e) {
+      logger.logError('deleteCourse', `${e}`)
 
       if (e instanceof CourseNotFound) return next(new HttpError(404, { status: e.status, message: e.message }))
-      logger.logError('deleteCourse', `${e}`)
       next(e)
     } finally {
       logger.endLog('deleteCourse')

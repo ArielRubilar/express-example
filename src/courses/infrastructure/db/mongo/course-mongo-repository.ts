@@ -1,32 +1,35 @@
-import { Course, NewCourse } from "../../../domain/course.type"
-import { CourseRepository } from '../../../domain/course.repository'
-import { Course as CourseDoc } from "./course.model"
-import { courseDocToCourse, newCourseToCourseRawDoc } from "./course-adapter"
+import { CourseDoc, Course, CourseRawDoc } from "./course.model"
 
 
-const addCourse = async (newCourse: NewCourse): Promise<Course> => {
-    const courseRawDoc = newCourseToCourseRawDoc(newCourse)
-    const courseDoc = new CourseDoc(courseRawDoc)
-    const createdCourseDoc = await courseDoc.save()
-    return courseDocToCourse(createdCourseDoc)
+const addCourse = async (newCourse: CourseRawDoc) => {
+    const courseRawDoc = { name: newCourse.name }
+    const course = new Course(courseRawDoc)
+    const createdCourseDoc = await course.save()
+    return createdCourseDoc
 }
 
 const deleteCourseById = async (id: string): Promise<void> => {
-    await CourseDoc.deleteOne({ _id: id })
+    await Course.deleteOne({ _id: id })
 }
 
-const findCourseById = async (id: string): Promise<Course | null> => {
-    const courseDoc = await CourseDoc.findById(id)
-    if (!courseDoc) return null
-    return courseDocToCourse(courseDoc)
+const findCourseById = async (id: string) => {
+    const courseDoc = await Course.findById(id)
+    return courseDoc
 }
 
-const getAllCourses = async (): Promise<Course[]> => {
-    const courseDocs = await CourseDoc.find({})
-    return courseDocs.map(courseDocToCourse)
+const getAllCourses = async () => {
+    const courseDocs = await Course.find({})
+    return courseDocs
 }
 
-export default function createCoursesMongoRepository(): CourseRepository {
+export interface CourseMongoDB {
+    addCourse: (rawDoc: CourseRawDoc) => Promise<CourseDoc>,
+    deleteCourseById: (id: string) => Promise<void>,
+    getAllCourses: () => Promise<CourseDoc[]>,
+    findCourseById: (id: string) => Promise<CourseDoc | null>
+}
+
+export default function createCoursesMongoDB(): CourseMongoDB {
 
     return {
         addCourse,
